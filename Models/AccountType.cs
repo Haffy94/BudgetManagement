@@ -13,6 +13,5 @@ namespace BudgetManagement.Models
         public int UserId { get; set; }
         public int Order { get; set; }
     }
-
 }
 

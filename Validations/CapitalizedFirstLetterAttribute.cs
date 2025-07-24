@@ -13,7 +13,7 @@ namespace BudgetManagement.Validations
 
             var firstLetter  = value.ToString()[0].ToString();
 
-            if (firstLetter  != firstLetter .ToUpper())
+            if (firstLetter  != firstLetter.ToUpper())
             {
                 return new ValidationResult("La primera letra debe ser mayúscula");
             }
