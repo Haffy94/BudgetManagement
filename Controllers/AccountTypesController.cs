@@ -19,7 +19,7 @@ namespace BudgetManagement.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(AccountType accountType)
+        public async Task<IActionResult> Create(AccountType accountType)
         {
             if (!ModelState.IsValid)
             {
@@ -27,7 +27,19 @@ namespace BudgetManagement.Controllers
             }
 
             accountType.UserId = 1;
-            accountTypesRepository.Create(accountType);
+
+            var accTypeExists =
+                    await accountTypesRepository.Exists(accountType.Name, accountType.UserId);
+
+            if (accTypeExists)
+            {
+                ModelState.AddModelError(nameof(accountType.Name),
+                $"El nombre {accountType.Name} ya existe.");
+
+                return View(accountType);
+            }
+
+            await accountTypesRepository.Create(accountType);
 
             return View();
         }
