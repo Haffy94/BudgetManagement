@@ -8,6 +8,7 @@ namespace BudgetManagement.Services
     {
         Task Create(AccountType accountType);
         Task<bool> Exists(string name, int userId);
+        Task<IEnumerable<AccountType>> Get(int usuarioId);
     }
 
     public class AccountTypesRepository : IAccountTypesRepository
@@ -42,6 +43,18 @@ namespace BudgetManagement.Services
             );
 
             return exists == 1;
+        }
+
+        public async Task<IEnumerable<AccountType>> Get(int userId)
+        {
+            using var connection = new SqlConnection(connectionString);
+            return await connection.QueryAsync<AccountType>
+            (
+                @"SELECT id, name,order_registry
+                FROM account_types
+                WHERE user_id = @UserId",
+                new { userId }
+            );
         }
     }
 }

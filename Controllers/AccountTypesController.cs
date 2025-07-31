@@ -12,7 +12,14 @@ namespace BudgetManagement.Controllers
         {
             this.accountTypesRepository = accountTypesRepository;
         }
-        
+
+        public async Task<IActionResult> Index()
+        {
+            var userid = 1;
+            var accounTypes = await accountTypesRepository.Get(userid);
+            return View(accounTypes);
+        }
+
         public IActionResult Create()
         {
             return View();
@@ -41,7 +48,21 @@ namespace BudgetManagement.Controllers
 
             await accountTypesRepository.Create(accountType);
 
-            return View();
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CheckIfExists(string name)
+        {
+            var userId = 1;
+            var alreadyExists = await accountTypesRepository.Exists(name, userId);
+
+            if (alreadyExists)
+            {
+                return Json($"El nombre {name} ya existe");
+            }
+
+            return Json(true);
         }
     }
 }
